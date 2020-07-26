@@ -16,6 +16,12 @@ semi-tones above it.
 cargo run --example fifths
 ```
 
+## Diminished Example
+
+Plug in your midi device, and try playing a diminished 7th chord like C,
+D sharp, F sharp, A! The program will play a base note that sounds good!
+
 ## Crates
 
 - midi/ provides a note on, note off midi parser, see midi/examples/fifths
+- scale/ provides working with sets of notes, see scale/examples/diminished
