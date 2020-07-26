@@ -10,10 +10,10 @@ pub enum Status {
 
 #[derive(Debug, PartialEq)]
 pub struct Note {
-    status: Status,
-    channel: u8,
-    pitch: u8,
-    velocity: u8,
+    pub status: Status,
+    pub channel: u8,
+    pub pitch: u8,
+    pub velocity: u8,
 }
 
 #[derive(Debug, PartialEq)]
@@ -26,13 +26,17 @@ pub enum DecodeError {
 pub type DecodeResult<T> = Result<T, DecodeError>;
 
 impl Note {
-    pub fn new(packet: &[u8; 3]) -> DecodeResult<Note> {
-        let mut note = Note {
+    pub fn zero() -> Note {
+        Note {
             status: Status::On,
             channel: 0,
             pitch: 0,
             velocity: 0,
-        };
+        }
+    }
+
+    pub fn new(packet: &[u8; 3]) -> DecodeResult<Note> {
+        let mut note = Note::zero();
         Note::decode(packet, &mut note)?;
         Ok(note)
     }
