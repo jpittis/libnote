@@ -6,7 +6,7 @@ const CSHARP_DIM_7: [usize; 4] = [1, 4, 7, 10];
 const D_DIM_7: [usize; 4] = [2, 5, 8, 11];
 
 fn main() -> io::Result<()> {
-    let mut iface = midi::IO::open("/dev/midi1")?;
+    let mut iface = midi::open_file("/dev/midi1")?;
     let mut note = midi::Note::zero();
     let mut active = scale::NoteSet::default();
     let mut sent_pitch = None;

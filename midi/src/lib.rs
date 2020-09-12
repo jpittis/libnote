@@ -78,30 +78,30 @@ impl Note {
     }
 }
 
-pub struct IO {
-    file: fs::File,
+pub struct IO<T: Read + Write> {
+    fd: T,
     packet: [u8; 3],
 }
 
-impl IO {
-    pub fn open(path: &str) -> io::Result<Self> {
-        let f = fs::OpenOptions::new().write(true).read(true).open(path)?;
-        Ok(Self {
-            file: f,
-            packet: [0; 3],
-        })
-    }
-
+impl<T: Read + Write> IO<T> {
     pub fn read(&mut self, note: &mut Note) -> io::Result<()> {
-        self.file.read_exact(&mut self.packet)?;
+        self.fd.read_exact(&mut self.packet)?;
         Note::decode(&self.packet, note)
             .map_err(|err| io::Error::new(io::ErrorKind::Other, format!("{:?}", err)))
     }
 
     pub fn write(&mut self, note: &Note) -> io::Result<()> {
         Note::encode(note, &mut self.packet);
-        self.file.write_all(&self.packet)
+        self.fd.write_all(&self.packet)
     }
+}
+
+pub fn open_file(path: &str) -> io::Result<IO<fs::File>> {
+    let f = fs::OpenOptions::new().write(true).read(true).open(path)?;
+    Ok(IO {
+        fd: f,
+        packet: [0; 3],
+    })
 }
 
 #[cfg(test)]
